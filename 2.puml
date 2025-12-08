@@ -1,0 +1,120 @@
+@startuml
+class chat.ClientGUI {
+- ChatBox chatBox
+- SendBox sendBox
+- LoginPopup loginPopup
+- String username
+- int port
+- InetAddress address
+- ChatClientSocket socket
++ <<Create>> ClientGUI()
++ void launch()
++ void quit()
+}
+
+
+interface chat.MessageListener {
+~ void newMessage(MessageEvent)
+}
+
+class chat.ChatBox {
+- JTextPane textBox
+- MessageListener appendNewMsg
++ <<Create>> ChatBox()
++ MessageListener getMessageListener()
+}
+
+
+class chat.SendBox {
+- JButton sendBtn
+- JTextField msgField
+- List<MessageListener> listeners
++ <<Create>> SendBox(String)
++ void addListener(MessageListener)
+}
+
+
+class chat.ChatServerSocket {
+- int port
+- {static} CopyOnWriteArrayList<Session> sessions
++ <<Create>> ChatServerSocket(int)
++ void start()
++ void broadcast(String,Session)
+}
+
+
+class chat.ChatServerSocket$Session {
+- Socket sessionSocket
+- PrintWriter out
+- BufferedReader in
+- String username
++ <<Create>> Session(Socket)
++ void run()
++ void sendMsg(String)
+}
+
+
+class chat.Main {
++ {static} void main(String[])
+}
+
+class chat.LoginPopup {
+- JTextField usernameField
+- JTextField addressField
+- JTextField portField
+- JLabel errorLabel
+- Object[] message
+- String username
+- InetAddress address
+- int port
++ <<Create>> LoginPopup(int)
++ InetAddress getAddress()
++ int getPort()
++ String getUsername()
+- int show(String)
++ int run()
+}
+
+
+class chat.ChatClientSocket {
+- PrintWriter out
+- BufferedReader in
+- List<MessageListener> listeners
+- MessageListener sendMsgListener
++ <<Create>> ChatClientSocket(InetAddress,int,String)
++ void addListener(MessageListener)
++ MessageListener getMessageListener()
+}
+
+
+class chat.ChatClientSocket$InputHandler {
+- BufferedReader in
+~ String serverInput
++ <<Create>> InputHandler(BufferedReader)
++ void run()
+}
+
+
+class chat.MessageEvent {
+- String content
+- String sender
++ <<Create>> MessageEvent(Object,String,String)
++ String getContent()
++ String getSender()
+}
+
+
+
+
+chat.JFrame <|-- chat.ClientGUI
+java.util.EventListener <|-- chat.MessageListener
+chat.JPanel <|-- chat.ChatBox
+chat.JPanel <|-- chat.SendBox
+chat.ServerSocket <|-- chat.ChatServerSocket
+chat.ChatServerSocket +.. chat.ChatServerSocket$Session
+chat.Runnable <|.. chat.ChatServerSocket$Session
+java.net.Socket <|-- chat.ChatClientSocket
+chat.ChatClientSocket +.. chat.ChatClientSocket$InputHandler
+chat.Runnable <|.. chat.ChatClientSocket$InputHandler
+java.util.EventObject <|-- chat.MessageEvent
+@enduml

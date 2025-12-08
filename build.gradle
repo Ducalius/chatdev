@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'chat'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register("jarClient", Jar) {
+    archiveAppendix.set("client")
+
+    manifest {
+        attributes "Main-Class": "chat.client.ClientMain"
+        attributes "Class-Path": "Client.jar"
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+assemble.dependsOn(jarClient)
+jar.dependsOn(jarClient)
+
+tasks.register("jarServer", Jar) {
+    archiveAppendix.set("server")
+    manifest {
+        attributes "Main-Class": "chat.client.ClientMain"
+        attributes "Class-Path": "Client.jar"
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+assemble.dependsOn(jarServer)
+jar.dependsOn(jarServer)
+
+tasks.register("runClient", JavaExec) {
+    group = ApplicationPlugin.APPLICATION_GROUP
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'chat.client.ClientMain'
+}
+
+tasks.register("runServer", JavaExec) {
+    group = ApplicationPlugin.APPLICATION_GROUP
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'chat.server.ServerMain'
+}
