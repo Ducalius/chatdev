@@ -3,26 +3,31 @@ package chat.client;
 import javax.swing.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
- * Компонент, управляющий окном получения данных для авторизации
+ * Компонент, управляющий окном получения данных для регистрации
  */
-public class LoginPopup {
+public class RegisterPopup {
     // Поля окна
     private final JTextField usernameField = new JTextField();
+    private final JTextField emailField = new JTextField();
     private final JTextField passwordField = new JPasswordField();
     private final JLabel errorLabel = new JLabel();
 
-    public enum UserAction {OK, CLOSE, REGISTER};
+    public enum UserAction {OK, CLOSE, LOGIN};
 
     private final Object[] message = {
             "Username:", usernameField,
+            "Email:", emailField,
             "Password:", passwordField,
             errorLabel
     };
 
     private String username = null;
     private String password = null;
+    private String email = null;
+
 
 
     /**
@@ -34,6 +39,14 @@ public class LoginPopup {
     }
 
     /**
+     * Возвращает почту, указанную пользователем
+     * @return почта, указанная пользователем
+     */
+    public String getEmail() {
+        return this.email;
+    }
+
+    /**
      * Возвращает пароль, указанный пользователем
      * @return юзернейм, указанный пользователем
      */
@@ -41,12 +54,18 @@ public class LoginPopup {
         return this.password;
     }
 
-    /**
-     * Очищает поле пароля
-     */
     public void clearPassword() {
         passwordField.setText("");
         this.password = null;
+    }
+
+    public void clearAll() {
+        passwordField.setText("");
+        this.password = null;
+        usernameField.setText("");
+        this.username = null;
+        emailField.setText("");
+        this.email = null;
     }
 
     /**
@@ -55,12 +74,12 @@ public class LoginPopup {
      * @return результат взаимодействия с пользователем. Подробнее в {@link JOptionPane}
      */
     private int show(String error) {
-        Object[] options = { "Open Register Page", "Continue"};
+        Object[] options = { "Open Login Page", "Continue"};
         errorLabel.setText(error);
         return JOptionPane.showOptionDialog(
                 null,
                 this.message,
-                "Login",
+                "Register",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
@@ -88,19 +107,19 @@ public class LoginPopup {
         UserAction result;
         String errorMsg = error;
         while (true) {
-
             option = show(errorMsg);
 
             this.username = usernameField.getText();
+            this.email = emailField.getText();
             this.password = passwordField.getText();
             passwordField.setText("");
 
 
-            if (option==-1)
+            if (option == -1)
                 return UserAction.CLOSE;
 
             if (option == 0)
-                return UserAction.REGISTER;
+                return UserAction.LOGIN;
 
 
             // Валидация юзернейма
@@ -108,9 +127,14 @@ public class LoginPopup {
                 errorMsg = "Username should be at least 3 characters long";
                 continue;
             }
+
+            // Валидация почты
+            if(!EmailValidator.getInstance().isValid(email)) {
+                errorMsg = "Invalid Email Address";
+                continue;
+            }
             // Валидация пароля
             if(password.length() < 8) {
-                clearPassword();
                 errorMsg = "Password should be at least 8 characters long";
                 continue;
             }
