@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"chat.client"},{"l":"chat.server"},{"l":"chat.server.db.controllers"},{"l":"chat.server.db.models"},{"l":"chat.util"}];updateSearchResults();
