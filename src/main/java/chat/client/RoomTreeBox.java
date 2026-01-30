@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 /**
  * Компонент, управляющий списком доступных пользователю чатов
  */
-public class RoomTreeBox extends JPanel {
+private class RoomTreeBox extends JPanel {
     private final JTree roomTree;
 
     private final HashMap<String, Integer> roomTreeMap = new LinkedHashMap<>();
