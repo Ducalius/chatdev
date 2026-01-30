@@ -18,7 +18,7 @@ import java.util.Objects;
  * Компонент, осуществляющий взаимодействие с сервером
  *
  */
-public class ChatClientSocket extends Socket {
+private class ChatClientSocket extends Socket {
 
     private final PrintWriter out;
     private final BufferedReader in;
