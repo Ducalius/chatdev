@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 /**
  * Компонент, отображающий сообщения
  */
-public class ChatBox extends JPanel {
+private class ChatBox extends JPanel {
 
     private final JPanel textArea = new JPanel(new CardLayout());
 
