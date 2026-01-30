@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Компонент, предоставляющий пользователю интерфейс для отправки сообщений
  */
-public class SendBox extends JPanel {
+private class SendBox extends JPanel {
     //private final JLabel usernameLabel;
     private final JButton sendBtn;
     private final JTextField msgField;
