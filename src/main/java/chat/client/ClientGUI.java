@@ -12,7 +12,7 @@ import java.net.InetAddress;
 /**
  * Основной класс интерфейса клиентской программы
  */
-private class ClientGUI extends JFrame {
+public class ClientGUI extends JFrame {
 
 
     private ChatBox chatBox;
